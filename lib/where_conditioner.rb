@@ -24,6 +24,12 @@ module WhereConditioner
     conditional !@last_condition, &block
   end
 
+  def elsif condition, &block
+    result = conditional (!@last_condition && condition), &block
+    @last_condition = condition
+    result
+  end
+
   def where_if_present *args    
     if Hash === args.first && args.length == 1
       hash = args.first.compact

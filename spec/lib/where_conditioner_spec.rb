@@ -132,4 +132,70 @@ describe WhereConditioner do
       end
     end
   end
+
+  describe '#elsif' do
+    context 'chained' do
+      context 'with true, true condition' do
+        it 'passes method calls to relation' do
+          expect(relation).to receive(:foo).and_return(relation)
+          expect(relation).to receive(:baz)
+          relation.if(true).foo.elsif(true).bar.baz
+        end
+      end
+
+      context 'with false, true condition' do
+        it 'passes method calls to relation' do
+          expect(relation).to receive_message_chain(:bar, :baz)
+          relation.if(false).foo.elsif(true).bar.baz
+        end
+      end
+
+      context 'with false, false condition' do
+        it 'passes method calls to relation' do
+          expect(relation).to receive(:baz)
+          relation.if(false).foo.elsif(false).bar.baz
+        end
+      end
+
+      context 'with true, false condition' do
+        it 'passes method calls to relation' do
+          expect(relation).to receive(:foo).and_return(relation)
+          expect(relation).to receive(:baz)
+          relation.if(true).foo.elsif(false).bar.baz
+        end
+      end
+    end
+
+    context 'with a block' do
+      context 'with true, true condition' do
+        it 'passes method calls to relation' do
+          expect(relation).to receive(:foo).and_return(relation)
+          expect(relation).to receive(:moop)
+          relation.if(true).foo.elsif(true) { bar.baz }.moop
+        end
+      end
+
+      context 'with false, true condition' do
+        it 'passes method calls to relation' do
+          expect(relation).to receive_message_chain(:bar, :baz, :moop)
+          relation.if(false).foo.elsif(true) { bar.baz }.moop
+        end
+      end
+
+      context 'with false, false condition' do
+        it 'passes method calls to relation' do
+          expect(relation).to receive(:moop)
+          relation.if(false).foo.elsif(false) { bar.baz }.moop
+        end
+      end
+
+      context 'with true, false condition' do
+        it 'passes method calls to relation' do
+          expect(relation).to receive(:foo).and_return(relation)
+          expect(relation).to receive(:moop)
+          relation.if(true).foo.elsif(false) { bar.baz }.moop
+        end
+      end
+    end
+  end
 end
