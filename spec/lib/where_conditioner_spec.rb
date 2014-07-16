@@ -169,6 +169,22 @@ describe WhereConditioner do
           relation.if(true).foo.elsif(false).bar.baz
         end
       end
+
+      context 'with multiple elsifs' do
+        it 'passes method calls to relation' do
+          expect(relation).to receive(:foo).and_return(relation)
+          expect(relation).to receive(:bar)
+          relation.if(true).foo.elsif(false).bad.elsif(true).other_bad.else.really_bad.bar
+        end
+      end
+
+      context 'with an else clause' do
+        it 'passes method calls to relation' do
+          expect(relation).to receive(:foo).and_return(relation)
+          expect(relation).to receive(:bar)
+          relation.if(true).foo.elsif(false).bad.elsif(false).other_bad.else.really_bad.bar
+        end
+      end
     end
 
     context 'with a block' do

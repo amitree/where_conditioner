@@ -25,9 +25,9 @@ module WhereConditioner
   end
 
   def elsif condition, &block
-    result = conditional (!@last_condition && condition), &block
-    @last_condition = condition
-    result
+    condition &&= !@last_condition # falsify condition if an "if" or "elsif" branch has already succeeded
+    @last_condition ||= condition  # @last_condition is true if at least one branch has succeeded, including this elsif
+    conditional condition, &block
   end
 
   def where_if_present *args    

@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name         = 'where_conditioner'
-  spec.version      = '1.1.1'
-  spec.date         = '2014-05-21'
+  spec.version      = '1.1.2'
+  spec.date         = Date.today.to_s
   spec.summary      = "Where Conditioner"
   spec.description  = "Where Conditioner allows you to write conditional `where` expressions in a DRY manner."
   spec.authors      = ["Tony Novak", "Jonathan Aizen"]
