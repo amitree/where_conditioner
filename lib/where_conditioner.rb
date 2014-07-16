@@ -32,7 +32,7 @@ module WhereConditioner
 
   def where_if_present *args    
     if Hash === args.first && args.length == 1
-      hash = args.first.compact
+      hash = WhereConditioner.recursive_compact(args.first)
       if hash.present?
         self.where hash
       else
@@ -65,6 +65,25 @@ private
       end
     end
   end
+
+  def self.recursive_compact(hash)
+    hash.dup.tap do |hash|
+      hash.each do |key,value|
+        case value
+        when nil
+          hash.delete key
+        when Hash
+          compacted = recursive_compact(value)
+          if compacted.empty?
+            hash.delete key
+          else
+            hash[key] = compacted
+          end
+        end
+      end
+    end
+  end
+
 end
 
 module ActiveRecord

@@ -22,6 +22,11 @@ describe WhereConditioner do
         relation.where_if_present(key1: '', key2: nil, key3: 'value', key4: 0)
       end
 
+      it 'filters out nils in nested hashes' do
+        expect(relation).to receive(:where).with(table1: { key1: '', key3: 'value', key4: 0 }, table3: { key6: 'value' })
+        relation.where_if_present(table1: {key1: '', key2: nil, key3: 'value', key4: 0}, table2: {key5: nil}, table3: {key6: 'value'})
+      end
+
       it 'does not call where(), and returns self, if all values are nil' do
         expect(relation).not_to receive(:where)
         relation.where_if_present(key1: nil, key2: nil)
